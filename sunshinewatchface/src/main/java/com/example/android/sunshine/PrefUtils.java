@@ -1,4 +1,4 @@
-package com.sean.sunshinewatchface;
+package com.example.android.sunshine;
 
 import android.content.Context;
 import android.content.SharedPreferences;

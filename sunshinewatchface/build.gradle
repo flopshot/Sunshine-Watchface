@@ -6,7 +6,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.sean.sunshinewatchface"
+        applicationId "com.example.android.sunshine"
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1

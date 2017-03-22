@@ -1,8 +1,10 @@
 Start Both Emulators
 
+Disconnect/Forget Watch in Phone app
+
 telnet localhost 5556
 
-'auth D0ZQT4JolsomeoWu'
+auth D0ZQT4JolsomeoWu
 
 redir add tcp:5601:5601
 
