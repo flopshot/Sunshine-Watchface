@@ -17,6 +17,7 @@ package com.example.android.sunshine.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.v4.util.Pair;
 
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
@@ -26,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility functions to handle OpenWeatherMap JSON data.
@@ -74,8 +77,10 @@ public final class OpenWeatherJsonUtils {
      *
      * @throws JSONException If JSON data cannot be properly parsed
      */
-    public static ContentValues[] getWeatherContentValuesFromJson(Context context, String forecastJsonStr)
+    public static Pair<List<String>, ContentValues[]> getWeatherContentValuesFromJson(Context context, String forecastJsonStr)
             throws JSONException {
+
+        List<String> returnStringArray = new ArrayList<>();
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
 
@@ -166,6 +171,13 @@ public final class OpenWeatherJsonUtils {
             high = temperatureObject.getDouble(OWM_MAX);
             low = temperatureObject.getDouble(OWM_MIN);
 
+            // NEW CODE TO IMPLEMENT WEARABLE WATCH-FACE UPDATE
+            if (i == 0) {
+                returnStringArray.add(String.valueOf(high));
+                returnStringArray.add(String.valueOf(low));
+                returnStringArray.add(String.valueOf(weatherId));
+            }
+
             ContentValues weatherValues = new ContentValues();
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, dateTimeMillis);
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, humidity);
@@ -179,6 +191,6 @@ public final class OpenWeatherJsonUtils {
             weatherContentValues[i] = weatherValues;
         }
 
-        return weatherContentValues;
+        return Pair.create(returnStringArray, weatherContentValues);
     }
 }

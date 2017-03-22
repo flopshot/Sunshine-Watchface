@@ -18,6 +18,7 @@ package com.example.android.sunshine.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.text.format.DateUtils;
 
 import com.example.android.sunshine.data.SunshinePreferences;
@@ -27,6 +28,7 @@ import com.example.android.sunshine.utilities.NotificationUtils;
 import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
 
 import java.net.URL;
+import java.util.List;
 
 public class SunshineSyncTask {
 
@@ -38,7 +40,7 @@ public class SunshineSyncTask {
      *
      * @param context Used to access utility methods and the ContentResolver
      */
-    synchronized public static void syncWeather(Context context) {
+    synchronized public static List<String> syncWeather(Context context) {
 
         try {
             /*
@@ -52,8 +54,11 @@ public class SunshineSyncTask {
             String jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl);
 
             /* Parse the JSON into a list of weather values */
-            ContentValues[] weatherValues = OpenWeatherJsonUtils
+            //UPDATED TO GET PAIR. FIRST ELEMENT OF PAIR IS DATA NEEDED TO BE SENT TO THE WEARABLE
+            Pair<List<String>, ContentValues[]> weatherValuesPair = OpenWeatherJsonUtils
                     .getWeatherContentValuesFromJson(context, jsonWeatherResponse);
+
+            ContentValues[] weatherValues = weatherValuesPair.second;
 
             /*
              * In cases where our JSON contained an error code, getWeatherContentValuesFromJson
@@ -108,9 +113,13 @@ public class SunshineSyncTask {
 
             }
 
+            return weatherValuesPair.first;
+
         } catch (Exception e) {
             /* Server probably invalid */
             e.printStackTrace();
+            return null;
         }
+
     }
 }

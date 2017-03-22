@@ -1,3 +1,13 @@
+Start Both Emulators
+
+telnet localhost 5556
+
+'auth D0ZQT4JolsomeoWu'
+
+redir add tcp:5601:5601
+
+connect phone em using app
+
 Go Ubiquitous Grading Rubric
 
 App works on both round and square face watches.

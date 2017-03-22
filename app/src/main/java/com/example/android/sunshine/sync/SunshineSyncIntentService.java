@@ -18,11 +18,15 @@ package com.example.android.sunshine.sync;
 import android.app.IntentService;
 import android.content.Intent;
 
+import java.util.List;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  */
 public class SunshineSyncIntentService extends IntentService {
+
+    private static final String EXTRA_WEARABLE_DATA = "SunshineSyncIntentServiceWearableDataExtra";
 
     public SunshineSyncIntentService() {
         super("SunshineSyncIntentService");
@@ -30,6 +34,14 @@ public class SunshineSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SunshineSyncTask.syncWeather(this);
+
+
+        List<String> wearableDataList =  SunshineSyncTask.syncWeather(getApplicationContext());
+        String[] wearableDataStringArray = wearableDataList.toArray(new String[0]);
+
+        Intent syncWearableIntent = new Intent();
+        syncWearableIntent.setClass(getApplicationContext(), SunshineSyncWearable.class);
+        syncWearableIntent.putExtra(EXTRA_WEARABLE_DATA, wearableDataStringArray);
+        startService(syncWearableIntent);
     }
 }
